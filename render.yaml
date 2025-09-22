@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: todo-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false # This will be set manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false # This will be set manually in Render dashboard
