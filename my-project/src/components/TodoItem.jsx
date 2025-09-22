@@ -167,7 +167,7 @@ const TodoItem = ({ task, onUpdateTask, onDeleteTask, onToggleTask }) => {
       )}
 
       <div className="flex items-start space-x-4">
-        {/* Enhanced Checkbox */}
+        {/* Beautiful Enhanced Checkbox */}
         <div className="flex-shrink-0 mt-1">
           <button
             onClick={(e) => {
@@ -175,17 +175,45 @@ const TodoItem = ({ task, onUpdateTask, onDeleteTask, onToggleTask }) => {
               handleToggle();
             }}
             disabled={isLoading}
-            className={`w-8 h-8 rounded-2xl border-3 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-lg hover:shadow-xl transform hover:scale-110 ${
+            className={`relative w-10 h-10 rounded-3xl border-3 transition-all duration-500 focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-lg hover:shadow-2xl transform hover:scale-110 active:scale-95 group overflow-hidden ${
               status
-                ? 'bg-gradient-to-br from-emerald-400 via-green-500 to-teal-500 border-emerald-400 text-white shadow-emerald-200 dark:shadow-emerald-900/50'
-                : 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 hover:shadow-indigo-100 dark:hover:shadow-indigo-900/30'
+                ? 'bg-gradient-to-br from-emerald-400 via-green-500 to-teal-500 border-emerald-400 text-white shadow-emerald-200 dark:shadow-emerald-900/50 hover:shadow-emerald-300/50 dark:hover:shadow-emerald-800/50'
+                : 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 bg-white dark:bg-slate-800 hover:bg-gradient-to-br hover:from-indigo-50 hover:via-blue-50 hover:to-purple-50 dark:hover:from-slate-700 dark:hover:via-indigo-900/20 dark:hover:to-purple-900/20 hover:shadow-indigo-100 dark:hover:shadow-indigo-900/30'
             }`}
           >
+            {/* Animated background shimmer effect */}
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+              status
+                ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
+                : 'bg-gradient-to-r from-transparent via-indigo-200/30 to-transparent dark:via-indigo-300/20'
+            }`}></div>
+
+            {/* Pulsing ring effect for completed state */}
             {status && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
+              <div className="absolute inset-0 rounded-3xl animate-ping bg-emerald-400/30"></div>
             )}
+
+            {/* Enhanced checkmark with animation */}
+            {status && (
+              <div className="relative z-10 flex items-center justify-center">
+                <svg className="w-6 h-6 transition-all duration-300 transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+                {/* Sparkle effects */}
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
+                <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse delay-150"></div>
+              </div>
+            )}
+
+            {/* Pending state icon */}
+            {!status && (
+              <div className="relative z-10 flex items-center justify-center group-hover:animate-bounce">
+                <div className="w-3 h-3 rounded-full border-2 border-current opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            )}
+
+            {/* Ripple effect overlay */}
+            <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-active:opacity-100 transition-opacity duration-150"></div>
           </button>
         </div>
 
@@ -308,6 +336,40 @@ const TodoItem = ({ task, onUpdateTask, onDeleteTask, onToggleTask }) => {
                     {status ? '✓ Completed' : '○ Pending'}
                   </span>
                 </div>
+
+                {/* Mark as Complete Button - only show for pending tasks */}
+                {!status && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggle();
+                    }}
+                    disabled={isLoading}
+                    className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white rounded-2xl text-sm font-semibold hover:from-emerald-600 hover:via-green-600 hover:to-teal-600 disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-emerald-200 dark:hover:shadow-emerald-900/50 transform hover:scale-105 active:scale-95"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Mark Complete
+                  </button>
+                )}
+
+                {/* Mark as Pending Button - only show for completed tasks */}
+                {status && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggle();
+                    }}
+                    disabled={isLoading}
+                    className="flex items-center px-4 py-2 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 text-white rounded-2xl text-sm font-semibold hover:from-amber-600 hover:via-orange-600 hover:to-yellow-600 disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-amber-200 dark:hover:shadow-amber-900/50 transform hover:scale-105 active:scale-95"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Mark Pending
+                  </button>
+                )}
               </div>
 
               {/* Timestamps */}
